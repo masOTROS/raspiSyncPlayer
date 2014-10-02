@@ -30,6 +30,7 @@
 # Resources
 *.mov
 *.mp4
+*.xml
 
 #IDE Specific files
 *.cbp
