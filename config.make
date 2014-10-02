@@ -1,5 +1,3 @@
-MAKEFILE_DEBUG = 1
-
 ################################################################################
 # CONFIGURE PROJECT MAKEFILE (optional)
 #   This file is where we make project specific configurations.
@@ -11,17 +9,6 @@ MAKEFILE_DEBUG = 1
 #       (default) OF_ROOT = ../../.. 
 ################################################################################
 # OF_ROOT = ../../..
-
-################################################################################
-# App Name
-# 	Custom Application Name
-#       (default) APPNAME = (this project's folder name)
-# App Name Suffix
-#       (default) APPNAME_SUFFIX = .app
-#
-################################################################################
-# APPNAME = customAppName
-# APPNAME_SUFFIX = .app
 
 ################################################################################
 # PROJECT ROOT
@@ -50,10 +37,7 @@ MAKEFILE_DEBUG = 1
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# 
-OFXOMXPLAYER_PATH = $(PROJECT_ROOT)/../../../addons/ofxOMXPlayer
-PROJECT_EXTERNAL_SOURCE_PATHS = $(OFXOMXPLAYER_PATH)/src
-#PROJECT_EXTERNAL_SOURCE_PATHS +=  $(OFXOMXPLAYER_PATH)/src
+# PROJECT_EXTERNAL_SOURCE_PATHS = 
 
 ################################################################################
 # PROJECT EXCLUSIONS
@@ -77,7 +61,7 @@ PROJECT_EXTERNAL_SOURCE_PATHS = $(OFXOMXPLAYER_PATH)/src
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_EXCLUSIONS =$(OFXOMXPLAYER_PATH)/libs/ffmpeg/include%
+# PROJECT_EXCLUSIONS =
 
 ################################################################################
 # PROJECT LINKER FLAGS
@@ -94,19 +78,6 @@ PROJECT_EXTERNAL_SOURCE_PATHS = $(OFXOMXPLAYER_PATH)/src
 # incorporated directly into the final executable application binary.
 # TODO: should this be a default setting?
 # PROJECT_LDFLAGS=-Wl,-rpath=./libs
-FFMPEG_LIBS = $(OFXOMXPLAYER_PATH)/libs/ffmpeg/libs
-FORMAT_STATIC=$(FFMPEG_LIBS)/libavformat.a
-CODEC_STATIC=$(FFMPEG_LIBS)/libavcodec.a
-SCALE_STATIC=$(FFMPEG_LIBS)/libswscale.a
-UTIL_STATIC=$(FFMPEG_LIBS)/libavutil.a
-
-#unused but available
-FILTER_STATIC=$(FFMPEG_LIBS)/libavfilter.a
-POSTPROC_STATIC=$(FFMPEG_LIBS)/libpostproc.a
-DEVICE_STATIC=$(FFMPEG_LIBS)/libavdevice.a
-RESAMPLE_STATIC=$(FFMPEG_LIBS)/libswresample.a
-
-PROJECT_LDFLAGS=-L$(FFMPEG_LIBS) $(FORMAT_STATIC) $(CODEC_STATIC) $(SCALE_STATIC) $(UTIL_STATIC) $(RESAMPLE_STATIC) $(FILTER_STATIC) -lm
 
 ################################################################################
 # PROJECT DEFINES
@@ -117,16 +88,7 @@ PROJECT_LDFLAGS=-L$(FFMPEG_LIBS) $(FORMAT_STATIC) $(CODEC_STATIC) $(SCALE_STATIC
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-PROJECT_DEFINES += __STDC_CONSTANT_MACROS 
-PROJECT_DEFINES += __STDC_LIMIT_MACROS 
-PROJECT_DEFINES += TARGET_POSIX 
-PROJECT_DEFINES += _LINUX
-#http://en.wikipedia.org/wiki/Position-independent_code 
-PROJECT_DEFINES += PIC 
-#Defining _REENTRANT causes the compiler to use thread safe (i.e. re-entrant) versions of several functions in the C library.
-PROJECT_DEFINES += _REENTRANT 
-PROJECT_DEFINES += OMX 
-PROJECT_DEFINES += OMX_SKIP64BIT 
+# PROJECT_DEFINES = 
 
 ################################################################################
 # PROJECT CFLAGS
@@ -143,7 +105,7 @@ PROJECT_DEFINES += OMX_SKIP64BIT
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-PROJECT_CFLAGS = -I$(OFXOMXPLAYER_PATH)/libs/ffmpeg/include -fPIC -U_FORTIFY_SOURCE -Wall -ftree-vectorize -ftree-vectorize
+# PROJECT_CFLAGS = 
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS

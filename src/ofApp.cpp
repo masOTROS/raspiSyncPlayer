@@ -33,12 +33,15 @@ void ofApp::setup(){
 	omxPlayer.setPaused(true);
 
 	cout << omxPlayer.getTotalNumFrames() << endl;
+    
+    serverRegistered = false;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-/*
+
 	float currTime = ofGetElapsedTimef();
+/*
 	if(frameRateTimeout<currTime){
 		cout << "FR@: " << ofGetFrameRate() << endl;
 		frameRateTimeout = currTime + 2;
@@ -50,8 +53,19 @@ void ofApp::update(){
 		ofxOscMessage m;
 		receiver.getNextMessage(&m);
         
+        //Register server's IP and PORT to periodically send currentFrame
+        if(m.getAddress() == "/registerServer"){
+            sender.setup(m.getRemoteIp(), m.getArgAsInt64(0));
+            serverRegistered = true;
+            
+            ofxOscMessage keepAlive;
+            keepAlive.setAddress("/keepAlive");
+            keepAlive.addInt64Arg(omxPlayer.getCurrentFrame());
+            sender.sendMessage(keepAlive);
+            lastKeepAliveTimeStamp = currTime;
+        }
 		// check for mouse moved message
-		if(m.getAddress() == "/play"){	
+		else if(m.getAddress() == "/play"){
 			cout<< "isPlaying: " << omxPlayer.isPlaying() << endl;
 			if(omxPlayer.getCurrentFrame()<0.95*(float)omxPlayer.getTotalNumFrames()){
 				omxPlayer.setPaused(m.getArgAsInt32(0));
@@ -67,6 +81,14 @@ void ofApp::update(){
 			omxPlayer.restartMovie();
 		}
 	}
+    
+    if(serverRegistered && (currTime>lastKeepAliveTimeStamp+KEEP_ALIVE_PERDIOD)){
+        ofxOscMessage keepAlive;
+        keepAlive.setAddress("/keepAlive");
+        keepAlive.addInt64Arg(omxPlayer.getCurrentFrame());
+        sender.sendMessage(keepAlive);
+        lastKeepAliveTimeStamp = currTime;
+    }
 }
 
 
