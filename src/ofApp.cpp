@@ -35,6 +35,11 @@ void ofApp::setup(){
 	cout << omxPlayer.getTotalNumFrames() << endl;
     
     serverRegistered = false;
+    
+    
+    //Settings
+    ofBuffer buffer = ofBufferFromFile("settings.xml");
+    name = buffer.getFirstLine();
 }
 
 //--------------------------------------------------------------
@@ -63,6 +68,12 @@ void ofApp::update(){
             keepAlive.addInt64Arg(omxPlayer.getCurrentFrame());
             sender.sendMessage(keepAlive);
             lastKeepAliveTimeStamp = currTime;
+        }
+        else if(m.getAddress() == "/yourName"){
+            ofxOscMessage namePost;
+            namePost.setAddress("/myName");
+            namePost.addStringArg(name);
+            sender.sendMessage(namePost);
         }
 		// check for mouse moved message
 		else if(m.getAddress() == "/play"){
