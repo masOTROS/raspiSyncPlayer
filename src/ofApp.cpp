@@ -118,6 +118,8 @@ void ofApp::draw(){
 			bplay = false;
 	}
 */
+    
+    ofDrawBitmapStringHighlight(omxPlayer.getInfo(), 60, 60, ofColor(ofColor::black, 90), ofColor::yellow);
 }
 
 //--------------------------------------------------------------
