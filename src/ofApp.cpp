@@ -80,7 +80,7 @@ void ofApp::update(){
     if(serverRegistered && (currTime>lastKeepAliveTimeStamp+KEEP_ALIVE_PERDIOD)){
         ofxOscMessage keepAlive;
         keepAlive.setAddress("/keepAlive");
-        keepAlive.addInt64Arg(omxPlayer.getCurrentFrame());
+        keepAlive.addStringArg(omxPlayer.getInfo());
         sender.sendMessage(keepAlive);
         lastKeepAliveTimeStamp = currTime;
     }
