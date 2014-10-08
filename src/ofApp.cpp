@@ -41,8 +41,6 @@ void ofApp::setup(){
     //Settings
     //ofBuffer buffer = ofBufferFromFile("settings.xml");
     //name = buffer.getFirstLine();
-    
-    bDebug = false;
 }
 
 //--------------------------------------------------------------
@@ -63,7 +61,7 @@ void ofApp::update(){
             
             ofxOscMessage keepAlive;
             keepAlive.setAddress("/keepAlive");
-            keepAlive.addInt64Arg(omxPlayer.getCurrentFrame());
+            keepAlive.addStringArg(omxPlayer.getInfo());
             sender.sendMessage(keepAlive);
             lastKeepAliveTimeStamp = currTime;
         }
@@ -92,11 +90,6 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    if(bDebug){
-        omxPlayer.draw(0,0);
-        ofDrawBitmapStringHighlight(omxPlayer.getInfo(), 60, 60, ofColor(ofColor::black, 90), ofColor::yellow);
-    }
-	
 }
 
 //--------------------------------------------------------------
@@ -108,22 +101,13 @@ void ofApp::keyPressed(int key){
         }
         else{
             omxPlayer.restartMovie();
+            omxPlayer.setPaused(true);
             cout << "Movie restarted" << endl;
         }                       
     }
     else if(key == 'r'){
         omxPlayer.restartMovie();
-    }
-    else if(key == 'd'){
-        bDebug = !bDebug;
-        
-        ofxOMXPlayerSettings settings;
-        settings.videoPath = videoPath;
-        settings.useHDMIForAudio = true;	//default true
-        settings.enableTexture = bDebug;		//default true
-        settings.enableLooping = false;		//default true
-        
-        omxPlayer.setup(settings);
+        omxPlayer.setPaused(true);
     }
 }
 

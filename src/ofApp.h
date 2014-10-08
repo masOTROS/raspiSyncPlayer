@@ -35,6 +35,4 @@ class ofApp : public ofBaseApp {
     
         float lastKeepAliveTimeStamp;
         bool serverRegistered;
-    
-        bool bDebug;
 };
