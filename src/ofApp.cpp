@@ -26,7 +26,7 @@ void ofApp::setup(){
 	ofxOMXPlayerSettings settings;
 	settings.videoPath = videoPath;
 	settings.useHDMIForAudio = true;	//default true
-	settings.enableTexture = false;		//default true
+	settings.enableTexture = true;		//default true
 	settings.enableLooping = false;		//default true
 
 	omxPlayer.setup(settings);
@@ -118,8 +118,9 @@ void ofApp::draw(){
 			bplay = false;
 	}
 */
+	omxPlayer.draw(0,0);
     
-    ofDrawBitmapStringHighlight(omxPlayer.getInfo(), 60, 60, ofColor(ofColor::black, 90), ofColor::yellow);
+	ofDrawBitmapStringHighlight(omxPlayer.getInfo(), 60, 60, ofColor(ofColor::black, 90), ofColor::yellow);
 }
 
 //--------------------------------------------------------------
