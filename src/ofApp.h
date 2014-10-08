@@ -27,6 +27,7 @@ class ofApp : public ofBaseApp {
 		void gotMessage(ofMessage msg);
 
         string name;
+        string videoPath;
     
 		ofxOscReceiver receiver;
         ofxOscSender sender;
@@ -34,4 +35,6 @@ class ofApp : public ofBaseApp {
     
         float lastKeepAliveTimeStamp;
         bool serverRegistered;
+    
+        bool bDebug;
 };

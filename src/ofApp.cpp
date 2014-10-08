@@ -8,7 +8,7 @@ void ofApp::setup(){
 	cout << "listening for osc messages on port " << PORT << "\n";
 	receiver.setup(PORT);
 
-	string videoPath = ofToDataPath("../../../../CANApps/videos/720p.mov", true);
+	videoPath = ofToDataPath("../../../../CANApps/videos/720p.mov", true);
 	
 	// this will just set videoPath to the first video in the videos folder, if any.
 	ofDirectory currentVideoDirectory(ofToDataPath("videos", true));
@@ -19,6 +19,7 @@ void ofApp::setup(){
 		if (files.size()>0) 
 		{
 			videoPath = files[0].path();
+            name = files[0].getFileName();
 		}		
 	}
 	
@@ -38,20 +39,17 @@ void ofApp::setup(){
     
     
     //Settings
-    ofBuffer buffer = ofBufferFromFile("settings.xml");
-    name = buffer.getFirstLine();
+    //ofBuffer buffer = ofBufferFromFile("settings.xml");
+    //name = buffer.getFirstLine();
+    
+    bDebug = false;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
 	float currTime = ofGetElapsedTimef();
-/*
-	if(frameRateTimeout<currTime){
-		cout << "FR@: " << ofGetFrameRate() << endl;
-		frameRateTimeout = currTime + 2;
-	}
-*/
+
 	// check for waiting messages
 	while(receiver.hasWaitingMessages()){
 		// get the next message
@@ -75,21 +73,9 @@ void ofApp::update(){
             namePost.addStringArg(name);
             sender.sendMessage(namePost);
         }
-		// check for mouse moved message
-		else if(m.getAddress() == "/play"){
-			cout<< "isPlaying: " << omxPlayer.isPlaying() << endl;
-			if(omxPlayer.getCurrentFrame()<0.95*(float)omxPlayer.getTotalNumFrames()){
-				omxPlayer.setPaused(m.getArgAsInt32(0));
-				cout << "play received, currentframe: " <<
-				omxPlayer.getCurrentFrame()<< endl;
-			}
-			else{
-				omxPlayer.restartMovie();
-				cout << "Movie restarted" << endl;
-			}			
-		}
-		else if(m.getAddress() == "/restart"){
-			omxPlayer.restartMovie();
+		// check for keyboard input message
+		else if(m.getAddress() == "/keyPressed"){
+            keyPressed(m.getArgAsInt32(0));
 		}
 	}
     
@@ -105,41 +91,40 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
-/*
-	string buf;
-	buf = "listening for osc messages on port" + ofToString(PORT);
-	ofDrawBitmapString(buf, 10, 20);
-
-	if(bplay){
-		if(messageTimeout > ofGetElapsedTimef())
-			ofDrawBitmapString("PLAY RECEIVED", 10, 35);
-		else
-			bplay = false;
-	}
-*/
-	omxPlayer.draw(0,0);
     
-	ofDrawBitmapStringHighlight(omxPlayer.getInfo(), 60, 60, ofColor(ofColor::black, 90), ofColor::yellow);
+    if(bDebug){
+        omxPlayer.draw(0,0);
+        ofDrawBitmapStringHighlight(omxPlayer.getInfo(), 60, 60, ofColor(ofColor::black, 90), ofColor::yellow);
+    }
+	
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	if(key == 'p'){  
-        	cout<< "isPlaying: " << omxPlayer.isPlaying() << endl;
-                if(omxPlayer.getCurrentFrame()<0.95*(float)omxPlayer.getTotalNumFrames()){
-                	omxPlayer.setPaused(!omxPlayer.isPaused());
-                        cout << "play received, currentframe: " <<
-                        omxPlayer.getCurrentFrame()<< endl;
-                }
-               	else{
-                       	omxPlayer.restartMovie();
-                	cout << "Movie restarted" << endl;
-                }                       
+	if(key == 'p'){
+        if(omxPlayer.getCurrentFrame()<0.95*(float)omxPlayer.getTotalNumFrames()){
+            omxPlayer.setPaused(!omxPlayer.isPaused());
+            cout << "play received, currentframe: " << omxPlayer.getCurrentFrame() << endl;
         }
-       	else if(key == 'r'){
-      		omxPlayer.restartMovie();
-       	}
+        else{
+            omxPlayer.restartMovie();
+            cout << "Movie restarted" << endl;
+        }                       
+    }
+    else if(key == 'r'){
+        omxPlayer.restartMovie();
+    }
+    else if(key == 'd'){
+        bDebug = !bDebug;
+        
+        ofxOMXPlayerSettings settings;
+        settings.videoPath = videoPath;
+        settings.useHDMIForAudio = true;	//default true
+        settings.enableTexture = bDebug;		//default true
+        settings.enableLooping = false;		//default true
+        
+        omxPlayer.setup(settings);
+    }
 }
 
 //--------------------------------------------------------------
