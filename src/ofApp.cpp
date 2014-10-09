@@ -83,8 +83,6 @@ void ofApp::update(){
     
     if(isReinitializing && omxPlayer.getCurrentFrame()>0 && omxPlayer.getCurrentFrame()<10){
         omxPlayer.setPaused(true);
-	omxPlayer.setPaused(false);
-	omxPlayer.setPaused(true);
 	isReinitializing = false;
 	cout << "video paused after restart" << endl;
     }
