@@ -41,7 +41,7 @@ void ofApp::setup(){
 
 isReinitializing = false;
     
-    
+#ifdef USE_ARDUINO    
     serial.listDevices();
 	//vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
 	
@@ -50,7 +50,7 @@ isReinitializing = false;
 	// arduino users check in arduino app....
 	int baud = 9600;
 	serial.setup(0, baud); //open the first device
-    
+#endif
     
     //Settings
     //ofBuffer buffer = ofBufferFromFile("settings.xml");
@@ -109,10 +109,12 @@ void ofApp::update(){
         sender.sendMessage(keepAlive);
         lastKeepAliveTimeStamp = currTime;
     }
-    
+
+#ifdef USE_ARDUINO    
     if(omxPlayer.isFrameNew()){
         serial.writeByte(omxPlayer.getCurrentFrame()%256);
     }
+#endif
 }
 
 
