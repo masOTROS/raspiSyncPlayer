@@ -38,6 +38,8 @@ void ofApp::setup(){
 	cout << omxPlayer.getTotalNumFrames() << endl;
     
     serverRegistered = false;
+
+isReinitializing = false;
     
     
     //Settings
@@ -79,8 +81,12 @@ void ofApp::update(){
 		}
 	}
     
-    if(isReinitializing && omxPlayer.getCurrentFrame()>0){
-        omxPlayer.setPAusde(true);
+    if(isReinitializing && omxPlayer.getCurrentFrame()>0 && omxPlayer.getCurrentFrame()<10){
+        omxPlayer.setPaused(true);
+	omxPlayer.setPaused(false);
+	omxPlayer.setPaused(true);
+	isReinitializing = false;
+	cout << "video paused after restart" << endl;
     }
     
     //Send "keep alive" if necessary
