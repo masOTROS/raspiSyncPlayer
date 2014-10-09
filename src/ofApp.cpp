@@ -75,6 +75,9 @@ void ofApp::update(){
             namePost.addStringArg(name);
             sender.sendMessage(namePost);
         }
+        else if(m.getAddress() == "/shutDown"){
+            ofSystem("sudo shutdown -h now");
+		}
 		// check for keyboard input message
 		else if(m.getAddress() == "/keyPressed"){
             keyPressed(m.getArgAsInt32(0));
@@ -83,8 +86,8 @@ void ofApp::update(){
     
     if(isReinitializing && omxPlayer.getCurrentFrame()>0 && omxPlayer.getCurrentFrame()<10){
         omxPlayer.setPaused(true);
-	isReinitializing = false;
-	cout << "video paused after restart" << endl;
+        isReinitializing = false;
+        cout << "video paused after restart" << endl;
     }
     
     //Send "keep alive" if necessary
