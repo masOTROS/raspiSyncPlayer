@@ -42,6 +42,16 @@ void ofApp::setup(){
 isReinitializing = false;
     
     
+    serial.listDevices();
+	//vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
+	
+	// this should be set to whatever com port your serial device is connected to.
+	// (ie, COM4 on a pc, /dev/tty.... on linux, /dev/tty... on a mac)
+	// arduino users check in arduino app....
+	int baud = 9600;
+	serial.setup(0, baud); //open the first device
+    
+    
     //Settings
     //ofBuffer buffer = ofBufferFromFile("settings.xml");
     //name = buffer.getFirstLine();
@@ -98,6 +108,10 @@ void ofApp::update(){
         keepAlive.addStringArg(omxPlayer.getInfo());
         sender.sendMessage(keepAlive);
         lastKeepAliveTimeStamp = currTime;
+    }
+    
+    if(omxPlayer.isFrameNew()){
+        serial.writeByte(omxPlayer.getCurrentFrame()%256);
     }
 }
 
