@@ -77,6 +77,7 @@ void ofApp::update(){
         }
         else if(m.getAddress() == "/shutDown"){
             ofSystem("sudo shutdown -h now");
+		cout << "System shutdown" << endl;
 		}
 		// check for keyboard input message
 		else if(m.getAddress() == "/keyPressed"){
