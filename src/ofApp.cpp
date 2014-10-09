@@ -3,6 +3,8 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	//ofSetLogLevel(OF_LOG_VERBOSE);
+    
+    ofHideCursor();
 
 	// listen on the given port
 	cout << "listening for osc messages on port " << PORT << "\n";
@@ -77,6 +79,11 @@ void ofApp::update(){
 		}
 	}
     
+    if(isReinitializing && omxPlayer.getCurrentFrame()>0){
+        omxPlayer.setPAusde(true);
+    }
+    
+    //Send "keep alive" if necessary
     if(serverRegistered && (currTime>lastKeepAliveTimeStamp+KEEP_ALIVE_PERDIOD)){
         ofxOscMessage keepAlive;
         keepAlive.setAddress("/keepAlive");
@@ -101,13 +108,15 @@ void ofApp::keyPressed(int key){
         }
         else{
             omxPlayer.restartMovie();
-            omxPlayer.setPaused(true);
+            //omxPlayer.setPaused(true);
+            isReinitializing = true;
             cout << "Movie restarted" << endl;
         }                       
     }
     else if(key == 'r'){
         omxPlayer.restartMovie();
-        omxPlayer.setPaused(true);
+        //omxPlayer.setPaused(true);
+        isReinitializing = true;
     }
 }
 
