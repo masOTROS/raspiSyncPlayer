@@ -30,7 +30,7 @@ void ofApp::setup(){
 	settings.videoPath = videoPath;
 	settings.useHDMIForAudio = true;	//default true
 	settings.enableTexture = false;		//default true
-	settings.enableLooping = false;		//default true
+	settings.enableLooping = true;		//default true
 
 	omxPlayer.setup(settings);
 	omxPlayer.setPaused(true);
@@ -95,11 +95,15 @@ void ofApp::update(){
 		}
 	}
     
-    if(isReinitializing && omxPlayer.getCurrentFrame()>=0 && omxPlayer.getCurrentFrame()<10){
-        omxPlayer.setPaused(true);
+    if(isReinitializing && omxPlayer.getCurrentFrame()==0){
+        //omxPlayer.setPaused(true);
+	omxPlayer.stepFrameForward();
         isReinitializing = false;
         cout << "video paused after restart" << endl;
     }
+	if(!isReinitializing && omxPlayer.getCurrentFrame()>1){
+		isReinitializing = true;
+	}
     
     //Send "keep alive" if necessary
     if(serverRegistered && (currTime>lastKeepAliveTimeStamp+KEEP_ALIVE_PERDIOD)){
@@ -142,6 +146,16 @@ void ofApp::keyPressed(int key){
         //omxPlayer.setPaused(true);
         isReinitializing = true;
     }
+	else if(key == OF_KEY_UP){
+		omxPlayer.fastForward();
+	}
+	else if(key == OF_KEY_DOWN){
+		omxPlayer.rewind();
+	}
+	else if(key == ' '){
+		omxPlayer.setNormalSpeed();
+	}
+
 }
 
 //--------------------------------------------------------------
