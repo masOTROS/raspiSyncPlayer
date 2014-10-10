@@ -111,7 +111,7 @@ void ofApp::update(){
     }
 
 #ifdef USE_ARDUINO    
-    if(omxPlayer.isFrameNew()){
+    if(omxPlayer.isFrameNew() && serial.isInitialized()){
         serial.writeByte(omxPlayer.getCurrentFrame()%256);
     }
 #endif
