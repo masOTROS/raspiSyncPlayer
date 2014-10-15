@@ -221,6 +221,9 @@ void ofApp::sendKeepAlive(){
     
     ofxOscMessage keepAlive;
     keepAlive.setAddress("/keepAlive");
+    keepAlive.addStringArg(name);
+    keepAlive.addStringArg(omxPlayer.getInfo());
+    
     /*
      keepAlive.addStringArg(name + "\n" +
      ofToString(ofGetFrameRate()) + "\n" +
@@ -228,7 +231,7 @@ void ofApp::sendKeepAlive(){
      ofToString(omxPlayer.getTotalNumFrames()) + "\n" +
      ofToString(omxPlayer.getCurrentFrame()) + "\n" +
      ofToString(omxPlayer.getVolume()) );
-     */
+    
     //NAME
     keepAlive.addStringArg(name);
     //FRAME RATE
@@ -241,7 +244,7 @@ void ofApp::sendKeepAlive(){
     keepAlive.addStringArg(ofToString(omxPlayer.getCurrentFrame()));
     //VOLUME
     keepAlive.addStringArg(ofToString(omxPlayer.getVolume()));
+    */
     
-    //keepAlive.addStringArg(omxPlayer.getInfo());
     sender.sendMessage(keepAlive);
 }
