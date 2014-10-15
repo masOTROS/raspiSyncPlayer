@@ -94,23 +94,7 @@ void ofApp::update(){
                 //Prevent form another server trying to take control while another one is registered
                 if(serverIP == m.getRemoteIp()){
                     //Answer with "keep alive"
-                    ofxOscMessage keepAlive;
-                    keepAlive.setAddress("/keepAlive");
-                    //NAME
-                    keepAlive.addStringArg(name);
-                    //FRAME RATE
-                    keepAlive.addStringArg(ofToString(ofGetFrameRate()));
-                    //DIMENSIONS
-                    keepAlive.addStringArg(ofToString(omxPlayer.getWidth()) + "x" + ofToString(omxPlayer.getHeight()));
-                    //TOTAL FRAMES
-                    keepAlive.addStringArg(ofToString(omxPlayer.getTotalNumFrames()));
-                    //CURRENT FRAME
-                    keepAlive.addStringArg(ofToString(omxPlayer.getCurrentFrame()));
-                    //VOLUME
-                    keepAlive.addStringArg(ofToString(omxPlayer.getVolume()));
-                    
-                    //keepAlive.addStringArg(omxPlayer.getInfo());
-                    sender.sendMessage(keepAlive);
+                    sendKeepAlive();
                     lastKeepAliveTimeStamp = currTime;
                 }
             }
@@ -118,10 +102,7 @@ void ofApp::update(){
                 //If no server is registered, register this one
                 sender.setup(m.getRemoteIp(), m.getArgAsInt64(0));
                 serverRegistered = true;
-                ofxOscMessage keepAlive;
-                keepAlive.setAddress("/keepAlive");
-                keepAlive.addStringArg(omxPlayer.getInfo());
-                sender.sendMessage(keepAlive);
+                sendKeepAlive();
                 lastKeepAliveTimeStamp = currTime;
             }
         }
@@ -233,4 +214,34 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
 
+}
+
+//--------------------------------------------------------------
+void ofApp::sendKeepAlive(){
+    
+    ofxOscMessage keepAlive;
+    keepAlive.setAddress("/keepAlive");
+    /*
+     keepAlive.addStringArg(name + "\n" +
+     ofToString(ofGetFrameRate()) + "\n" +
+     ofToString(omxPlayer.getWidth()) + "x" + ofToString(omxPlayer.getHeight()) + "\n" +
+     ofToString(omxPlayer.getTotalNumFrames()) + "\n" +
+     ofToString(omxPlayer.getCurrentFrame()) + "\n" +
+     ofToString(omxPlayer.getVolume()) );
+     */
+    //NAME
+    keepAlive.addStringArg(name);
+    //FRAME RATE
+    keepAlive.addStringArg(ofToString(ofGetFrameRate()));
+    //DIMENSIONS
+    keepAlive.addStringArg(ofToString(omxPlayer.getWidth()) + "x" + ofToString(omxPlayer.getHeight()));
+    //TOTAL FRAMES
+    keepAlive.addStringArg(ofToString(omxPlayer.getTotalNumFrames()));
+    //CURRENT FRAME
+    keepAlive.addStringArg(ofToString(omxPlayer.getCurrentFrame()));
+    //VOLUME
+    keepAlive.addStringArg(ofToString(omxPlayer.getVolume()));
+    
+    //keepAlive.addStringArg(omxPlayer.getInfo());
+    sender.sendMessage(keepAlive);
 }
