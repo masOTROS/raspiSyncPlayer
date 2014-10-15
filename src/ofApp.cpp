@@ -37,9 +37,10 @@ void ofApp::setup(){
 
 	cout << omxPlayer.getTotalNumFrames() << endl;
     
+    
     serverRegistered = false;
-
-isReinitializing = false;
+    serverIP = "";
+    isReinitializing = false;
     
 #ifdef USE_ARDUINO    
     serial.listDevices();
@@ -62,37 +63,68 @@ void ofApp::update(){
 
 	float currTime = ofGetElapsedTimef();
 
-	// check for waiting messages
+	// Handle communication protocol with server
 	while(receiver.hasWaitingMessages()){
 		// get the next message
 		ofxOscMessage m;
 		receiver.getNextMessage(&m);
         
+        
+        if(serverRegistered && serverIP == m.getRemoteIp()){
+            if(m.getAddress() == "/keyPressed"){
+                keyPressed(m.getArgAsInt32(0));
+            }
+            else if(m.getAddress() == "/shutDown"){
+                ofSystem("sudo shutdown -h now");
+                cout << "System shutdown" << endl;
+            }
+            /*
+            else if(m.getAddress() == "/yourName"){
+                ofxOscMessage namePost;
+                namePost.setAddress("/myName");
+                namePost.addStringArg(name);
+                sender.sendMessage(namePost);
+            }
+             */
+        }
         //Register server's IP and PORT to periodically send currentFrame
         if(m.getAddress() == "/registerServer"){
-            sender.setup(m.getRemoteIp(), m.getArgAsInt64(0));
-            serverRegistered = true;
             
-            ofxOscMessage keepAlive;
-            keepAlive.setAddress("/keepAlive");
-            keepAlive.addStringArg(omxPlayer.getInfo());
-            sender.sendMessage(keepAlive);
-            lastKeepAliveTimeStamp = currTime;
+            if(serverRegistered){
+                //Prevent form another server trying to take control while another one is registered
+                if(serverIP == m.getRemoteIp()){
+                    //Answer with "keep alive"
+                    ofxOscMessage keepAlive;
+                    keepAlive.setAddress("/keepAlive");
+                    //NAME
+                    keepAlive.addStringArg(name);
+                    //FRAME RATE
+                    keepAlive.addStringArg(ofToString(ofGetFrameRate()));
+                    //DIMENSIONS
+                    keepAlive.addStringArg(ofToString(omxPlayer.getWidth()) + "x" + ofToString(omxPlayer.getHeight()));
+                    //TOTAL FRAMES
+                    keepAlive.addStringArg(ofToString(omxPlayer.getTotalNumFrames()));
+                    //CURRENT FRAME
+                    keepAlive.addStringArg(ofToString(omxPlayer.getCurrentFrame()));
+                    //VOLUME
+                    keepAlive.addStringArg(ofToString(omxPlayer.getVolume()));
+                    
+                    //keepAlive.addStringArg(omxPlayer.getInfo());
+                    sender.sendMessage(keepAlive);
+                    lastKeepAliveTimeStamp = currTime;
+                }
+            }
+            else{
+                //If no server is registered, register this one
+                sender.setup(m.getRemoteIp(), m.getArgAsInt64(0));
+                serverRegistered = true;
+                ofxOscMessage keepAlive;
+                keepAlive.setAddress("/keepAlive");
+                keepAlive.addStringArg(omxPlayer.getInfo());
+                sender.sendMessage(keepAlive);
+                lastKeepAliveTimeStamp = currTime;
+            }
         }
-        else if(m.getAddress() == "/yourName"){
-            ofxOscMessage namePost;
-            namePost.setAddress("/myName");
-            namePost.addStringArg(name);
-            sender.sendMessage(namePost);
-        }
-        else if(m.getAddress() == "/shutDown"){
-            ofSystem("sudo shutdown -h now");
-		cout << "System shutdown" << endl;
-		}
-		// check for keyboard input message
-		else if(m.getAddress() == "/keyPressed"){
-            keyPressed(m.getArgAsInt32(0));
-		}
 	}
     
     if(isReinitializing && omxPlayer.getCurrentFrame()==0){
@@ -105,6 +137,11 @@ void ofApp::update(){
 		isReinitializing = true;
 	}
     
+    if(serverRegistered && (currTime>lastKeepAliveTimeStamp+KEEP_ALIVE_PERDIOD)){
+        serverRegistered = false;
+        serverIP = "";
+    }
+    /*
     //Send "keep alive" if necessary
     if(serverRegistered && (currTime>lastKeepAliveTimeStamp+KEEP_ALIVE_PERDIOD)){
         ofxOscMessage keepAlive;
@@ -113,6 +150,7 @@ void ofApp::update(){
         sender.sendMessage(keepAlive);
         lastKeepAliveTimeStamp = currTime;
     }
+     */
 
 #ifdef USE_ARDUINO    
     if(omxPlayer.isFrameNew() && serial.isInitialized()){

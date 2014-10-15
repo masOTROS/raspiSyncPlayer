@@ -36,7 +36,9 @@ class ofApp : public ofBaseApp {
 		ofxOMXPlayer omxPlayer;
     
         float lastKeepAliveTimeStamp;
+        string serverIP;
         bool serverRegistered;
+        //float lastKeepAliveTimeStamp;
     
         bool isReinitializing;
     
