@@ -28,6 +28,7 @@ class ofApp : public ofBaseApp {
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         void sendKeepAlive();
+        void setFrame(int frame);
 
         string name;
         string videoPath;

@@ -78,6 +78,9 @@ void ofApp::update(){
                 ofSystem("sudo shutdown -h now");
                 cout << "System shutdown" << endl;
             }
+            else if(m.getAddress() == "/setFrame"){
+                setFrame(m.getArgAsInt32(0));
+            }
             /*
             else if(m.getAddress() == "/yourName"){
                 ofxOscMessage namePost;
@@ -248,4 +251,13 @@ void ofApp::sendKeepAlive(){
     */
     
     sender.sendMessage(keepAlive);
+}
+
+void ofApp::setFrame(int frame){
+    omxPlayer.setPaused(true);
+    if(frame >= omxPlayer.getCurrentFrame() && frame<omxPlayer.getTotalNumFrames()){
+        while(omxPlayer.getCurrentFrame()<frame){
+            omxPlayer.stepFrameForward();
+        }
+    }
 }
