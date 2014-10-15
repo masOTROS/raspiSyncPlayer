@@ -104,6 +104,7 @@ void ofApp::update(){
                 serverRegistered = true;
                 sendKeepAlive();
                 lastKeepAliveTimeStamp = currTime;
+                serverIP = m.getRemoteIp();
             }
         }
 	}
