@@ -137,7 +137,7 @@ void ofApp::update(){
 		isReinitializing = true;
 	}
     
-    if(serverRegistered && (currTime>lastKeepAliveTimeStamp+KEEP_ALIVE_PERDIOD)){
+    if(serverRegistered && (currTime>lastKeepAliveTimeStamp+SERVER_CONNECTION_TIMEOUT)){
         serverRegistered = false;
         serverIP = "";
     }

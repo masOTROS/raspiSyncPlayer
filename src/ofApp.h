@@ -9,7 +9,7 @@
 // listen on port 12345
 #define PORT 12345
 
-#define KEEP_ALIVE_PERDIOD  0.5 //time delay from consecutive KEEP_ALIVE messages to server
+#define SERVER_CONNECTION_TIMEOUT  2 //time delay from consecutive KEEP_ALIVE messages to server
 
 class ofApp : public ofBaseApp {
 	public:
