@@ -44,19 +44,19 @@ void ofApp::setup(){
     
 #ifdef USE_ARDUINO    
     serial.listDevices();
-	//vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
-	
-	// this should be set to whatever com port your serial device is connected to.
-	// (ie, COM4 on a pc, /dev/tty.... on linux, /dev/tty... on a mac)
-	// arduino users check in arduino app....
-	int baud = 9600;
-	serial.setup(0, baud); //open the first device
 	vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
 	if(deviceList.size()>0){
-		cout << "Connecting to serial with name: " << deviceList[0].getDeviceName() << endl;
+        int baud = 9600;
+        //open the first device
+        if(serial.setup(0, baud)){
+            cout << "Successfully connected to serial with name: " << deviceList[0].getDeviceName() << endl;
+        }
+        else{
+            cout << "Failed to connect to serial with name: " << deviceList[0].getDeviceName() << endl;
+        }
 	}
 	else{
-		cout º<< "No serial device detected" << endl;
+		cout << "No serial device detected" << endl;
 	}
 #endif
     
