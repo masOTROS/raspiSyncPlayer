@@ -51,6 +51,13 @@ void ofApp::setup(){
 	// arduino users check in arduino app....
 	int baud = 9600;
 	serial.setup(0, baud); //open the first device
+	vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
+	if(deviceList.size()>0){
+		cout << "Connecting to serial with name: " << deviceList[0].getDeviceName() << endl;
+	}
+	else{
+		cout º<< "No serial device detected" << endl;
+	}
 #endif
     
     //Settings

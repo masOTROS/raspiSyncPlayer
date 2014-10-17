@@ -4,7 +4,7 @@
 #include "ofxOsc.h"
 #include "ofxOMXPlayer.h"
 
-#define WITH_ARDUINO
+#define USE_ARDUINO
 
 // listen on port 12345
 #define PORT 12345
@@ -44,7 +44,7 @@ class ofApp : public ofBaseApp {
     
         bool isReinitializing;
     
-#ifdef WITH_ARDUINO
+#ifdef USE_ARDUINO
         ofSerial	serial;
 #endif
 };
